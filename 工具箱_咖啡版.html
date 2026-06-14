@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>咖啡馆小红书内容工具箱</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f5f5; display: flex; justify-content: center; }
+
+  .app { width: 750px; min-height: 100vh; background: #fff; position: relative; }
+
+  .topbar {
+    background: linear-gradient(135deg, #6B4226, #8B5E3C); color: #fff;
+    padding: 50px 40px 35px; text-align: center;
+  }
+  .topbar .logo { font-size: 22px; opacity: 0.85; margin-bottom: 8px; }
+  .topbar h1 { font-size: 40px; font-weight: 900; letter-spacing: 3px; }
+  .topbar .sub { font-size: 24px; opacity: 0.85; margin-top: 8px; }
+
+  .tabs { display: flex; background: #fff; border-bottom: 2px solid #eee; position: sticky; top: 0; z-index: 10; }
+  .tab { flex: 1; text-align: center; padding: 26px 0; font-size: 26px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab.active { color: #6B4226; border-bottom-color: #6B4226; }
+
+  .content { padding: 30px 35px; display: none; }
+  .content.active { display: block; }
+
+  .card {
+    background: #fff; border-radius: 20px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0;
+  }
+  .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .card-icon { font-size: 40px; }
+  .card-title { font-size: 30px; font-weight: 800; color: #222; }
+  .card-desc { font-size: 22px; color: #888; margin-bottom: 20px; line-height: 1.5; }
+
+  .prompt-box {
+    background: #fafafa; border-radius: 14px; padding: 22px; margin-bottom: 16px;
+    border: 1px solid #eee; position: relative;
+  }
+  .prompt-label { font-size: 22px; color: #6B4226; font-weight: 700; margin-bottom: 10px; }
+  .prompt-text { font-size: 24px; color: #333; line-height: 1.7; }
+  .copy-btn {
+    position: absolute; top: 18px; right: 18px;
+    background: #6B4226; color: #fff; border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 22px; cursor: pointer; font-weight: 600;
+  }
+  .copy-btn:active { background: #4A2E1A; }
+
+  .step { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 20px; }
+  .step-num {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+    background: #6B4226; color: #fff; font-size: 24px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-text { font-size: 24px; color: #444; line-height: 1.6; padding-top: 6px; }
+
+  .note { background: #F5EDE3; border-radius: 12px; padding: 20px; font-size: 22px; color: #6B4226; margin-top: 15px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="logo">☕ 咖啡馆专属</div>
+    <h1>小红书内容工具箱</h1>
+    <div class="sub">复制提示词 → AI出图 → 直接发</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('create')">🎨 出图</div>
+    <div class="tab" onclick="switchTab('copy')">✍️ 文案</div>
+    <div class="tab" onclick="switchTab('plan')">📅 日程</div>
+    <div class="tab" onclick="switchTab('guide')">📖 教程</div>
+  </div>
+
+  <!-- ========== 出图 ========== -->
+  <div class="content active" id="tab-create">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">☕</div>
+        <div class="card-title">咖啡特写海报</div>
+      </div>
+      <div class="card-desc">适合：新品咖啡上市、招牌推荐、菜单展示</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一杯精致的拿铁咖啡特写，奶泡上拉花精美，放在木桌上，旁边有咖啡豆点缀，窗外自然光照进来，温暖治愈氛围，咖啡店角落，画面干净有质感，美食摄影风格，竖版构图，留白适合加文字，ins风高级感</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🍰</div>
+        <div class="card-title">咖啡+甜品组合</div>
+      </div>
+      <div class="card-desc">适合：下午茶套餐、闺蜜聚会场景</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一杯咖啡搭配一块精致蛋糕/甜点，木质托盘上摆放，旁边有鲜花或绿植点缀，阳光洒落，慵懒下午茶氛围，生活美学风格，温暖治愈，竖版海报构图，画面大面积留白加标题，让人看了就想约朋友去坐坐</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏠</div>
+        <div class="card-title">店铺环境展示</div>
+      </div>
+      <div class="card-desc">适合：展示咖啡店装修风格、吸引打卡</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">温暖舒适的咖啡店室内环境，柔和暖光，原木色家具，几组客人安静聊天或办公，角落里书架和绿植，落地窗外透进自然光，日系治愈风格，不是生硬的店铺广告，像随手记录的日常，生活感十足，竖版3:4</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎄</div>
+        <div class="card-title">季节限定海报</div>
+      </div>
+      <div class="card-desc">适合：季节特调、节日限定饮品</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">[季节/节日]主题咖啡馆海报，[如：秋天/圣诞节/樱花季]元素融入咖啡场景，暖色调，咖啡杯上有[季节元素如肉桂/拐杖糖/樱花]装饰，氛围感强，高级不花哨，竖版设计，大面积留白写标题和价格，让人一眼就想喝</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+      <div class="note">💡 把 [季节/节日] 和 [季节元素] 换掉，一年四季通用</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📱</div>
+        <div class="card-title">朋友圈九宫格</div>
+      </div>
+      <div class="card-desc">适合：日常发朋友圈/小红书，一组9张统一风格</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一组咖啡店日常照片合集风格，包含：咖啡制作过程、拉花细节、客人看书、窗边座位、甜品柜、吧台一角。每张都是统一暖色调，像同一个下午拍的，生活美学博主风格，自然不做作，适合发九宫格</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 文案 ========== -->
+  <div class="content" id="tab-copy">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🆕</div>
+        <div class="card-title">新品咖啡文案</div>
+      </div>
+      <div class="card-desc">适合：新饮品上架</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，主题是咖啡店新品上市。语气要像咖啡爱好者分享，不硬推销。描述新品的风味特点（比如柑橘酸、坚果香、奶泡绵密），用感官语言让人读了就想喝。带标签#咖啡探店 #新品尝鲜 #本地咖啡馆。150字左右。</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <div class="card-title">客人故事文案</div>
+      </div>
+      <div class="card-desc">适合：记录有意思的客人或瞬间，增加人情味</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，记录今天咖啡店里一位有意思的客人或一个温暖的瞬间。像讲故事一样，不说教不广告。从老板/咖啡师的第一视角，语气温暖真诚。结尾可以加一句"这样的下午，希望你也来坐坐"。带标签#咖啡馆日常 #人间温暖</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">☕</div>
+        <div class="card-title">咖啡知识分享</div>
+      </div>
+      <div class="card-desc">适合：展示专业度、吸引咖啡爱好者</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，分享一条咖啡相关的有趣小知识，比如"拿铁和澳白的区别""为什么手冲咖啡要闷蒸""咖啡豆烘焙度怎么选"。语气轻松有趣，像跟朋友科普，不装专业。结尾自然带一句"来店里我冲一杯你尝尝"。带标签#咖啡知识 #咖啡入门</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💪</div>
+        <div class="card-title">上班族/自习场景文案</div>
+      </div>
+      <div class="card-desc">适合：吸引自习、办公、发呆人群</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，主题是"一个人来咖啡馆待一下午"。描述安静舒适的角落、好喝的咖啡、适合看书或办公的灯光氛围。语气治愈，让刷到的人觉得"好想翘班来这里坐着"。带标签#鞍山咖啡馆 #一个人发呆 #城市角落</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 日程 ========== -->
+  <div class="content" id="tab-plan">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📅</div>
+        <div class="card-title">一周发布计划 · 照着发就行</div>
+      </div>
+      <div class="card-desc">每天1条，不超过10分钟</div>
+
+      <div class="prompt-box">
+        <div class="prompt-label">周一 · 咖啡特写 + 金句</div>
+        <div class="prompt-text">用"咖啡特写海报"生成一张图，发笔记。标题写"周一的命是这杯给的｜打工人续命指南"，配文简短写这杯咖啡的风味特点</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周二 · 咖啡小知识</div>
+        <div class="prompt-text">用"咖啡知识分享"文案生成内容，配一张吧台或冲煮过程的照片。标题写成问答式，比如"拿铁和澳白到底差在哪？｜3秒看懂"</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周三 · 客人故事</div>
+        <div class="prompt-text">用"客人故事文案"生成内容，配一张店里有人坐着的氛围图（注意不要拍脸侵犯隐私）。标题写"今天店里来了个人｜他说……"</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周四 · 下午茶诱惑</div>
+        <div class="prompt-text">用"咖啡+甜品组合"生成一张图，标题写"周四了｜周末还远吗？奖励自己一杯"，配文安利你们的招牌甜品+咖啡搭配</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周五 · 周末邀约</div>
+        <div class="prompt-text">用"店铺环境展示"生成一张氛围图，加上"上班族/自习场景文案"。标题写"周末找个角落发呆｜这家店藏着不想走"</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周六 · 季节限定/活动</div>
+        <div class="prompt-text">用"季节限定海报"生成一张图，标题写"这季新品｜只有这个季节才喝得到"，文案写限定的稀缺感。如果有团购直接挂链接</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周日 · 慢生活vlog风</div>
+        <div class="prompt-text">拍15秒短视频：磨豆→萃取→拉花→出杯的全过程。配一句"周日的节奏｜本来就该这么慢"。不推销，纯展示。视频比图文流量高。</div>
+      </div>
+
+      <div class="note">💡 咖啡馆内容的核心不是"推销咖啡"，而是"传递生活方式"。客人买的不是一杯咖啡，是那个下午的感觉。</div>
+    </div>
+  </div>
+
+  <!-- ========== 教程 ========== -->
+  <div class="content" id="tab-guide">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📖</div>
+        <div class="card-title">5分钟上手 · 从零到发布</div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>打开通义千问</strong><br>手机下载"通义千问"APP，或用电脑打开 tongyi.aliyun.com。免费注册登录即可使用。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>回到本页面复制提示词</strong><br>在"出图"或"文案"标签里找到想要的，点"复制"按钮。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>粘贴到通义千问</strong><br>粘贴提示词发送，AI自动生成图片或文案。不满意就再点一次"重新生成"。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>保存到手机相册</strong><br>长按生成的图片保存，或复制文案文字。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text"><strong>打开小红书发布</strong><br>点➕号 → 选图片 → 粘贴文案 → 带上标签 → 发布。完成。</div>
+      </div>
+
+      <div class="note">💡 咖啡馆内容像泡咖啡一样——不要太满，留白才美。不刷屏、不硬推、把氛围感做足就够了。</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function copyText(btn) {
+  const text = btn.parentElement.querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = '✅ 已复制';
+    btn.style.background = '#4CAF50';
+    setTimeout(() => { btn.innerText = orig; btn.style.background = '#6B4226'; }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>餐饮小红书内容工具箱</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f5f5; display: flex; justify-content: center; }
+
+  .app { width: 750px; min-height: 100vh; background: #fff; position: relative; }
+
+  /* 顶部 */
+  .topbar {
+    background: linear-gradient(135deg, #FF2442, #E61A35); color: #fff;
+    padding: 50px 40px 35px; text-align: center;
+  }
+  .topbar .logo { font-size: 22px; opacity: 0.85; margin-bottom: 8px; }
+  .topbar h1 { font-size: 40px; font-weight: 900; letter-spacing: 3px; }
+  .topbar .sub { font-size: 24px; opacity: 0.85; margin-top: 8px; }
+
+  /* 标签切换 */
+  .tabs { display: flex; background: #fff; border-bottom: 2px solid #eee; position: sticky; top: 0; z-index: 10; }
+  .tab { flex: 1; text-align: center; padding: 26px 0; font-size: 26px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab.active { color: #FF2442; border-bottom-color: #FF2442; }
+
+  /* 内容区 */
+  .content { padding: 30px 35px; display: none; }
+  .content.active { display: block; }
+
+  /* 模块卡片 */
+  .card {
+    background: #fff; border-radius: 20px; padding: 30px; margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0;
+  }
+  .card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .card-icon { font-size: 40px; }
+  .card-title { font-size: 30px; font-weight: 800; color: #222; }
+  .card-desc { font-size: 22px; color: #888; margin-bottom: 20px; line-height: 1.5; }
+
+  /* 提示词框 */
+  .prompt-box {
+    background: #fafafa; border-radius: 14px; padding: 22px; margin-bottom: 16px;
+    border: 1px solid #eee; position: relative;
+  }
+  .prompt-label { font-size: 22px; color: #FF2442; font-weight: 700; margin-bottom: 10px; }
+  .prompt-text { font-size: 24px; color: #333; line-height: 1.7; }
+  .copy-btn {
+    position: absolute; top: 18px; right: 18px;
+    background: #FF2442; color: #fff; border: none; border-radius: 8px;
+    padding: 10px 20px; font-size: 22px; cursor: pointer; font-weight: 600;
+  }
+  .copy-btn:active { background: #C8102E; }
+
+  /* 使用说明 */
+  .step { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 20px; }
+  .step-num {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+    background: #FF2442; color: #fff; font-size: 24px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-text { font-size: 24px; color: #444; line-height: 1.6; padding-top: 6px; }
+
+  .note { background: #FFF8E1; border-radius: 12px; padding: 20px; font-size: 22px; color: #A68A00; margin-top: 15px; }
+
+  .emoji-big { font-size: 56px; text-align: center; margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- 顶部 -->
+  <div class="topbar">
+    <div class="logo">🍽️ 餐饮行业专属</div>
+    <h1>小红书内容工具箱</h1>
+    <div class="sub">复制提示词 → AI出图 → 直接发</div>
+  </div>
+
+  <!-- 标签 -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('create')">🎨 出图</div>
+    <div class="tab" onclick="switchTab('copy')">✍️ 文案</div>
+    <div class="tab" onclick="switchTab('plan')">📅 日程</div>
+    <div class="tab" onclick="switchTab('guide')">📖 教程</div>
+  </div>
+
+  <!-- ========== 出图标签 ========== -->
+  <div class="content active" id="tab-create">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🍜</div>
+        <div class="card-title">新品上市海报</div>
+      </div>
+      <div class="card-desc">适合：新菜品上市、季节限定、招牌推荐</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一碗热气腾腾的红烧牛肉面，汤色红亮，大块牛肉软烂入味，撒着翠绿葱花，暖黄色灯光从上方打下来，俯拍角度，美食摄影风格，竖版构图，留白区域适合加文字，中式面馆氛围，蒸汽袅袅，食欲感十足</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🔥</div>
+        <div class="card-title">爆款引流菜海报</div>
+      </div>
+      <div class="card-desc">适合：打造招牌爆款、吸引新客到店</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一锅沸腾的重庆老火锅，红油翻滚冒着热气，周围摆满毛肚鸭肠黄喉牛肉卷等新鲜食材，筷子夹起一片毛肚的特写，辣椒花椒清晰可见，暖色调，食欲感爆棚，美食大片风格，竖版海报构图，顶部留白写标题</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎉</div>
+        <div class="card-title">促销活动海报</div>
+      </div>
+      <div class="card-desc">适合：开业、周年庆、节日促销、满减活动</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">中式餐饮促销海报背景图，红色金色搭配，喜庆热闹氛围，精致菜品摆盘置于画面中央，周围点缀灯笼或烟花元素，高档餐厅质感，画面干净不杂乱，大面积留白给文字，暖色调，竖版海报，高级感而非土味促销</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📸</div>
+        <div class="card-title">菜品展示图</div>
+      </div>
+      <div class="card-desc">适合：日常发笔记配图、菜单展示</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">一道精致的[菜名]，自然光从侧面打过来，放在木桌上，旁边有筷子或餐具，生活化场景，不是生硬的摆拍，像手机随手拍但很好看，画面温暖有烟火气，美食博主风格，竖版 3:4 比例</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+      <div class="note">💡 把 [菜名] 换成你店里的菜，每次都能生成不一样的图</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏮</div>
+        <div class="card-title">节气/节日海报</div>
+      </div>
+      <div class="card-desc">适合：二十四节气、春节中秋端午等节日借势</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">[节日名称]主题餐饮海报背景，中式美学风格，淡雅高级，融入[节日元素如月饼/粽子/饺子]，画面中央有精致的菜品，大面积留白适合加字，不花哨，高级感，温暖治愈系，竖版设计</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+      <div class="note">💡 把 [节日名称] 和 [节日元素] 换掉，一个提示词用一年</div>
+    </div>
+  </div>
+
+  <!-- ========== 文案标签 ========== -->
+  <div class="content" id="tab-copy">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🆕</div>
+        <div class="card-title">新品上市文案</div>
+      </div>
+      <div class="card-desc">适合：有新菜上架时发布</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，主题是餐饮店新品上市。要求：标题带emoji，语气像朋友安利而不是广告，第一句就抓人，中间描述菜品口感和卖点，结尾引导到店尝试。带上标签。字数150字左右。</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💬</div>
+        <div class="card-title">客户好评转发文案</div>
+      </div>
+      <div class="card-desc">适合：客户给了好评，截屏发笔记</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，配图是客户的真实好评截图。语气真诚不做作，感谢客户的认可，顺带提到我们店的特色（比如汤底熬8小时、食材每天新鲜到），让刷到的人觉得这家店靠谱。带标签#本地美食推荐 #真实评价</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎬</div>
+        <div class="card-title">后厨揭秘文案</div>
+      </div>
+      <div class="card-desc">适合：展示后厨环境、制作过程，建立信任</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，主题是"后厨大揭秘"。用真实的语气展示我们厨房的卫生标准、食材处理过程、厨师做菜的细节。目的是让客户看到放心。不要广告腔，像拍了个vlog的配文。带标签#后厨实拍 #看得见的新鲜</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏪</div>
+        <div class="card-title">店铺日常文案</div>
+      </div>
+      <div class="card-desc">适合：日常保持更新频率，不推销只展示</div>
+      <div class="prompt-box">
+        <div class="prompt-label">📋 提示词（点击复制）</div>
+        <div class="prompt-text">帮我写一条小红书笔记文案，就是记录餐厅一天的日常。可以是备菜、打扫、迎接第一桌客人、打烊后的收尾。像日记一样真实自然，让看到的人觉得这家店有温度。不用硬推销，结尾留一句"路过的话来坐坐"就好。100字左右。</div>
+        <button class="copy-btn" onclick="copyText(this)">复制</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 日程标签 ========== -->
+  <div class="content" id="tab-plan">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📅</div>
+        <div class="card-title">一周发布计划 · 照着发就行</div>
+      </div>
+      <div class="card-desc">每天发1条，不用多想，按这个来</div>
+
+      <div class="prompt-box">
+        <div class="prompt-label">周一 · 新品/招牌菜</div>
+        <div class="prompt-text">发一张招牌菜的图片（用"菜品展示图"提示词生成），配文案介绍这道菜的特色。标题写"本周必吃｜XXX真的绝了"</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周二 · 客户好评</div>
+        <div class="prompt-text">截屏一条真实客户好评，发出来。标题写"被客人夸了｜开心到转圈" 配简短文案感谢客户</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周三 · 后厨日常</div>
+        <div class="prompt-text">拍一段15秒的后厨视频（切菜/炒菜/摆盘），用"后厨揭秘文案"生成配文。标题写"来看看你家晚饭是怎么做出来的"</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周四 · 优惠/活动</div>
+        <div class="prompt-text">发一张活动海报（用"促销活动海报"提示词生成），标题写"这周末来店就送XXX｜限时三天"，文案简洁说清楚优惠内容</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周五 · 种草安利</div>
+        <div class="prompt-text">发三张菜品的拼图，用"爆款引流菜海报"提示词生成。标题写"鞍山这家[你的品类]我不允许还有人没吃过"，配文像朋友推荐一样自然</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周六 · 店铺氛围</div>
+        <div class="prompt-text">拍店里的环境、灯光明暗、客人吃饭的场景。用"店铺日常文案"生成配文。不推销，纯展示氛围</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">周日 · 下周预告</div>
+        <div class="prompt-text">用"节气/节日海报"或"新品上市海报"提示词生成一张图。标题写"下周预告｜XX新品要来啦"，吊胃口让客户下周还想来</div>
+      </div>
+
+      <div class="note">💡 每天打开通义千问 → 复制对应提示词 → 生成图片或文案 → 打开小红书发布。全程不超过10分钟。</div>
+    </div>
+  </div>
+
+  <!-- ========== 教程标签 ========== -->
+  <div class="content" id="tab-guide">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📖</div>
+        <div class="card-title">5分钟上手 · 从零到发布</div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>打开通义千问</strong><br>手机下载"通义千问"APP，或用电脑打开 tongyi.aliyun.com，免费注册登录。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>回到本页面复制提示词</strong><br>在"出图"或"文案"标签里找到想要的，点"复制"按钮。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>粘贴到通义千问</strong><br>粘贴提示词发送，AI自动生成图片或文案。不满意就再点一次"重新生成"。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>保存到手机相册</strong><br>长按生成的图片保存，或复制文案文字。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text"><strong>打开小红书发布</strong><br>点➕号 → 选图片 → 粘贴文案 → 带上标签 → 发布。完成。</div>
+      </div>
+
+      <div class="note">💡 每天跟着"日程"标签页走就行，10分钟搞定一条笔记。坚持一周，就能看到流量变化。</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function copyText(btn) {
+  const text = btn.parentElement.querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = '✅ 已复制';
+    btn.style.background = '#4CAF50';
+    setTimeout(() => { btn.innerText = orig; btn.style.background = '#FF2442'; }, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
